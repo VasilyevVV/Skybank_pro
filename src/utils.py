@@ -7,6 +7,7 @@ import time
 
 from dotenv import load_dotenv
 
+
 # Загрузка переменных из .env-файла
 load_dotenv()
 # Получение API-ключей из файла .env
@@ -39,24 +40,41 @@ def get_period(current_date: str) -> dict:
         period["begin"] = dt.datetime.strftime(start_date, "%Y-%m-%d 00:00:00")
         period["end"] = current_date
     except:
-        #raise ValueError("Некорректно указана дата")
-        pass
+        return {}
+        # raise ValueError("Некорректно указана дата")
     return period
 
 
-def read_excel_file(file_path: str, work_date: str) -> pd.DataFrame | None:
+def read_excel_file(file_path: str) -> pd.DataFrame | None:
     """Чтение Excel-файла с операциями"""
-    period = get_period(work_date)
+    if os.path.exists(file_path):
+        # Если файл существует, попытка прочитать Excel-файл
+        try:
+            operations_df = pd.read_excel(file_path, parse_dates=False)
+        except ValueError:
+            raise ValueError(f"Ошибка чтения файла с операциями: {file_path}")
+        else:
+            return operations_df
+    else:
+        # Если файл по указанному пути не найден
+        raise FileNotFoundError(f"Файл с операциями не найден: {file_path}")
+
+
+def get_filtered_df(input_df:pd.DataFrame, current_date: str) -> pd.DataFrame | None:
+    """Функция отбора данных из DataFrame за период. Принимает на вход полный набор данных и дату.
+    Выводит данные за период с начало месяца по указанную дату."""
+    # Получение периода: с 1-го числа месяца по текущую дату
+    period = get_period(current_date)
     if period != {}:
         begin_day = dt.datetime.strptime(period["begin"], "%Y-%m-%d %H:%M:%S")
         end_day = dt.datetime.strptime(period["end"], "%Y-%m-%d %H:%M:%S")
-        operations_df = pd.read_excel(file_path, parse_dates=False)
         # Преобразование столбца "Дата платежа" в формат datetime
-        operations_df["Дата платежа"] = pd.to_datetime(operations_df["Дата платежа"], format="%d.%m.%Y", errors="coerce")
+        input_df["Дата платежа"] = pd.to_datetime(input_df["Дата платежа"], format="%d.%m.%Y",
+                                                       errors="coerce")
         # Отбор в результирующий DataFrame только операций за период: с 1 числа месяца по дату, переданную на вход
-        operations_df = operations_df[(operations_df["Дата платежа"] >= begin_day)
-                                      & (operations_df["Дата платежа"] <= end_day)]
-        return operations_df
+        filtered_df = input_df[(input_df["Дата платежа"] >= begin_day)
+                                      & (input_df["Дата платежа"] <= end_day)]
+        return filtered_df
     else:
         return None
 
