@@ -1,5 +1,4 @@
 import datetime as dt
-import pprint
 import json
 import os
 import pandas as pd
@@ -8,16 +7,12 @@ import time
 
 from dotenv import load_dotenv
 
-from src.config import BASE_DIRECTORY
 # Загрузка переменных из .env-файла
 load_dotenv()
-# получение имени файла с операциями из файла .env
-#file_operations = os.getenv("OPERATIONS_FILE_NAME")
-# Получение имени файла с пользовательскими списками валют и акций из файла .env
-#user_sett_file = os.getenv("USER_SETTINGS_JSON_FILE")
 # Получение API-ключей из файла .env
 RATE_API_KEY = os.getenv("RATE_API_KEY")
 STOCK_API_KEY = os.getenv("STOCK_API_KEY")
+
 
 def get_greeting() -> str:
     """Приветствие"""
@@ -126,13 +121,13 @@ def get_user_settings(json_fila_path: str) -> dict:
 
 def get_exchange_rates(currency_list: list) -> list[dict]:
     """
-    Функция для получения текущих курсов валют по отношению к рублю.
+    Функция для получения текущих курсов валют.
     Принимает на вход список кодов валют (н-р, [EUR, USD]), и обращается к сервису
     Exchange Rates Data API: https://apilayer.com/exchangerates_data-api
     """
-    # Валюта, относительно которой определяется курс (RUB)
-    convert_to = "RUB"
     if currency_list != []:
+        # Валюта, относительно которой определяется курс (RUB)
+        convert_to = "RUB"
         output_list = []
         request_header = {"apikey": RATE_API_KEY}
         for currency in currency_list:
@@ -162,18 +157,27 @@ def get_stocks_data(company_list: list) -> list[dict]:
     """Функция получения стоимости акций"""
     if company_list != []:
         output_list = []
-        # try
-        for company in company_list:
-            url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={company}&apikey={STOCK_API_KEY}"
-            response = requests.get(url)
-            #response.raise_for_status()
-            result = response.json()
-            # Код для получения цены акции.
-            latest_date = result["Meta Data"]["3. Last Refreshed"]
-            closing_price = result["Time Series (Daily)"][latest_date]["4. close"]
-            stock_dict = {"stock": company, "price": round(float(closing_price), 2)}
-            output_list.append(stock_dict)
-            time.sleep(1.5)
-        return output_list
+        try:
+            for company in company_list:
+                url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={company}&apikey={STOCK_API_KEY}"
+                response = requests.get(url)
+                response.raise_for_status()
+                status_code = response.status_code
+                result = response.json()
+                if status_code == 200:
+                    # Код для получения цены акции
+                    latest_date = result["Meta Data"]["3. Last Refreshed"]
+                    closing_price = result["Time Series (Daily)"][latest_date]["4. close"]
+                    stock_dict = {"stock": company, "price": round(float(closing_price), 2)}
+                    output_list.append(stock_dict)
+                    time.sleep(1.5)
+                else:
+                    stock_dict = {"stock": company, "price": "unknown"}
+                    output_list.append(stock_dict)
+            return output_list
+        except requests.exceptions.HTTPError:
+            return output_list
+        except:
+            raise ConnectionError("Не удалось подключиться к сервису")
     else:
         return []
