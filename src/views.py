@@ -29,22 +29,24 @@ def get_main_page_data(working_date: str) -> json:
     file_path = os.path.join(BASE_DIRECTORY, user_settings_file)
     user_settings = get_user_settings(file_path)
     if user_settings != {}:
+        # Получение списка валют и определение курса
         user_currencies = user_settings["user_currencies"]
-        # Список курсов валют
-        main_page_dict["currency_rates"] = get_exchange_rates(user_currencies)
+        #main_page_dict["currency_rates"] = get_exchange_rates(user_currencies)
+        # Получение списка акций и их стоимости
         user_stocks = user_settings["user_stocks"]
-        main_page_dict["stock_prices"] = get_stocks_data(user_stocks)
+        #main_page_dict["stock_prices"] = get_stocks_data(user_stocks)
     else:
-        user_currencies = []
-        user_stocks = []
+        main_page_dict["currency_rates"] = []
+        main_page_dict["stock_prices"] = []
     json_data = json.dumps(main_page_dict).encode('utf-8', 'ignore').decode('unicode-escape')
     return json_data
     #return main_page_dict
 
-res = get_main_page_data("2019-12-31 23:55:55")
-pprint.pprint(res, sort_dicts=False, )
+res = get_main_page_data("2020-03-31 23:55:55")
+#pprint.pprint(res, sort_dicts=False)
 print(res)
 
-#with open('output.json', 'w') as f:
-#    json.dump(res, f, ensure_ascii=False)
+# with open('output_f.json', 'w') as f:
+#     json.dump(res, f, ensure_ascii=True)
+
 
