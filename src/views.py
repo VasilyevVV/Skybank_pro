@@ -4,7 +4,7 @@ import pprint
 
 from dotenv import load_dotenv
 
-from src.config import BASE_DIRECTORY
+from config import BASE_DIRECTORY
 from utils import (get_exchange_rates, get_filtered_df, get_greeting, get_stocks_data, get_top_tx, get_user_settings,
                    read_excel_file, total_expenses)
 
@@ -15,9 +15,9 @@ operations_file = os.getenv("OPERATIONS_FILE_NAME")
 user_settings_file = os.getenv("USER_SETTINGS_JSON_FILE")
 
 
-def get_main_page_data(working_date: str) -> json:
+def get_main_page_data(working_date: str):
     """Функция для страницы «Главная». Принимает на вход строку с датой и временем в формате "YYYY-MM-DD HH:MM:SS"
-    Отдает JSON-ответ - ???
+       Отдает JSON-ответ - преобразованный из сформированного словаря
     """
     # Получение строки приветствия в зависимости от текущего времени
     main_page_dict = {"greeting": "", "cards": [], "top_transactions": [], "currency_rates": [], "stock_prices": []}
@@ -52,8 +52,8 @@ def get_main_page_data(working_date: str) -> json:
     # return main_page_dict
 
 
-res = get_main_page_data("2021-12-25 23:59:59")
-pprint.pprint(res)  # , sort_dicts=False)
+# res = get_main_page_data("2021-12-25 23:59:59")
+# pprint.pprint(res)  # , sort_dicts=False)
 # print(res)
 
 # with open('output_f.json', 'w') as f:
