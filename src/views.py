@@ -2,15 +2,11 @@ import json
 import os
 import pprint
 
-from dotenv import load_dotenv
-
-from config import BASE_DIRECTORY
+from config import BASE_DIRECTORY, operations_file
 from utils import (get_exchange_rates, get_filtered_df, get_greeting, get_stocks_data, get_top_tx, get_user_settings,
                    read_excel_file, total_expenses)
 
-load_dotenv()
-# Получение имени файла с операциями из файла .env
-operations_file = os.getenv("OPERATIONS_FILE_NAME")
+
 # Получение имени файла с пользовательскими списками валют и акций из файла .env
 user_settings_file = os.getenv("USER_SETTINGS_JSON_FILE")
 
@@ -22,9 +18,8 @@ def get_main_page_data(working_date: str):
     # Получение строки приветствия в зависимости от текущего времени
     main_page_dict = {"greeting": "", "cards": [], "top_transactions": [], "currency_rates": [], "stock_prices": []}
     main_page_dict["greeting"] = get_greeting()
-    # Путь к файлу с операциями. Имя файла задаётся в .env
-    file_path = os.path.join(BASE_DIRECTORY, "data", operations_file)
-    full_data_frame = read_excel_file(file_path)
+
+    full_data_frame = read_excel_file(str(os.path.join(BASE_DIRECTORY, "data", operations_file)))
     # Если набор данных пустой, расчёты суммы расходов по картам и топ-5 транзакций не производятся
     if full_data_frame.empty:
         main_page_dict["cards"] = []
@@ -40,10 +35,10 @@ def get_main_page_data(working_date: str):
     if user_settings != {}:
         # Получение списка валют и определение курса
         user_currencies = user_settings["user_currencies"]
-        main_page_dict["currency_rates"] = get_exchange_rates(user_currencies)
+        #main_page_dict["currency_rates"] = get_exchange_rates(user_currencies)
         # Получение списка акций и их стоимости
         user_stocks = user_settings["user_stocks"]
-        main_page_dict["stock_prices"] = get_stocks_data(user_stocks)
+        #main_page_dict["stock_prices"] = get_stocks_data(user_stocks)
     else:
         main_page_dict["currency_rates"] = []
         main_page_dict["stock_prices"] = []
@@ -52,9 +47,6 @@ def get_main_page_data(working_date: str):
     # return main_page_dict
 
 
-# res = get_main_page_data("2021-12-25 23:59:59")
+#res = get_main_page_data("2021-12-25 23:59:59")
 # pprint.pprint(res)  # , sort_dicts=False)
-# print(res)
-
-# with open('output_f.json', 'w') as f:
-#     json.dump(res, f, ensure_ascii=True)
+#print(res)
