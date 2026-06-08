@@ -32,16 +32,22 @@ def profit_categories(data: pd.DataFrame, work_month: int, work_year: int) -> js
         filtered_df = filtered_df[(filtered_df["Статус"] != "FAILED") & (filtered_df["Сумма платежа"] < 0.0)]
         # Группировка по категориям кешбэка (суммирование)
         sum_by_categories = filtered_df.groupby(by=["Категория"], sort=False)["Бонусы (включая кэшбэк)"].sum().reset_index()
-        services_dict = sum_by_categories.to_dict(orient="records")
-        sorted_transaction = sorted(services_dict, key=lambda x: x.get("Бонусы (включая кэшбэк)"), reverse=True)
-        output_dict = sorted_transaction[0:4]
-        out_d = {}
-        for cat in output_dict:
-            out_d[cat["Категория"]] = str(cat["Бонусы (включая кэшбэк)"])
-        json_data = json.dumps(out_d).encode("utf-8", "ignore").decode("unicode-escape")
+        # Сортировка по столбцу "Бонусы" в порядке убывания
+        sorted_df = sum_by_categories.sort_values(by=["Бонусы (включая кэшбэк)"], ascending=False)
+        # Обор строк только со значениями в столбце Бонус > 0 и выбор первых 3 строу
+        sorted_df = sorted_df[(sorted_df["Бонусы (включая кэшбэк)"]) > 0.0].iloc[0:3]
+        # Преобразование DanaFrame в список словарей - составления словаря в формате:
+        services_dict = sorted_df.to_dict(orient="records")
+        # Составление выходного словаря для преобразования в json
+        out_dict = {}
+        # Для каждого словаря из списка словарей составляем словарь для преобразования в json
+        # Ключ - название категории из поля "Категория", значение - значение из поля "Бонусы"
+        for category in services_dict:
+            out_dict[category["Категория"]] = category["Бонусы (включая кэшбэк)"]
+        json_data = json.dumps(out_dict).encode("utf-8", "ignore").decode("unicode-escape")
         return json_data
 
 
 full_data = read_excel_file(str(os.path.join(BASE_DIRECTORY, "data", operations_file)))
-res = profit_categories(full_data, 10, 2021)
+res = profit_categories(full_data, 3, 2021)
 print(res)
