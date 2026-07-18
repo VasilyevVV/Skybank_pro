@@ -49,7 +49,7 @@ def read_excel_file(file_path: str) -> pd.DataFrame | None:
     if os.path.exists(file_path):
         # Если файл существует, попытка прочитать Excel-файл
         try:
-            operations_df = pd.read_excel(file_path, parse_dates=False)
+            operations_df = pd.read_excel(file_path, parse_dates=False, na_filter=False)
         except ValueError:
             raise ValueError("Ошибка чтения файла с операциями")
         else:
@@ -59,7 +59,7 @@ def read_excel_file(file_path: str) -> pd.DataFrame | None:
         raise FileNotFoundError(f"Файл с операциями не найден: {file_path}")
 
 
-def get_filtered_df(input_df: pd.DataFrame, current_date: str) -> pd.DataFrame | None:
+def select_tx_for_period(input_df: pd.DataFrame, current_date: str) -> pd.DataFrame | None:
     """ Функция отбора данных из DataFrame за период.
         Принимает на вход полный набор данных и дату в формате ГГГГ-ММ-ДД ЧЧ:мм:сс.
         Выводит данные за период с начало месяца по указанную дату.
@@ -85,8 +85,8 @@ def total_expenses(df_excel: pd.DataFrame) -> list[dict]:
     elif df_excel.empty:
         return []
     else:
-        # Отбор только успешных операций, со статусом, на равным FAILED
-        filtered_df = df_excel[(df_excel["Статус"] != "FAILED") & (df_excel["Сумма платежа"] < 0.0)]
+        # Отбор успешных операций: статус не равен FAILED, только траты по картам: Сумма < 0 и "Номер карты" не пустой
+        filtered_df = df_excel[(df_excel["Статус"] != "FAILED") & (df_excel["Сумма платежа"] < 0.0) & (df_excel["Номер карты"] != '')]
         # Группировка по номерам карт и получение сумм
         sum_by_cards = filtered_df.groupby(by=["Номер карты"], sort=False)["Сумма операции"].sum().reset_index()
         # Переименование столбцов, для вывода словаря
@@ -179,9 +179,9 @@ def get_exchange_rates(currency_list: list) -> list[dict]:
 
 
 def get_stocks_data(company_list: list) -> list[dict]:
-    """Функция получения стоимости акций"""
+    """ Функция получения стоимости акций """
+    output_list = []
     if company_list != []:
-        output_list = []
         for company in company_list:
             # Код для получения стоимости акции
             stock_dict = {"stock": company, "price": "unknown"}
@@ -190,13 +190,14 @@ def get_stocks_data(company_list: list) -> list[dict]:
                 response = requests.get(url_str)
                 response.raise_for_status()
                 status_code = response.status_code
+                # если запрос успешен (код 200)
                 if status_code == 200:
                     result = response.json()
                     # Определение даты крайнего обновления цены - значения в ключе "3. Last Refreshed"
                     latest_date = result["Meta Data"]["3. Last Refreshed"]
                     # Определение цены по ключу - дате и значению на момент закрытия ("4. close")
                     closing_price = result["Time Series (Daily)"][latest_date]["4. close"]
-                    current_price = round(float(closing_price), 2)
+                    current_price = str(round(float(closing_price), 2))
                 else:
                     current_price = "unknown"
                 stock_dict = {"stock": company, "price": current_price}
@@ -205,7 +206,10 @@ def get_stocks_data(company_list: list) -> list[dict]:
             except:
                 output_list.append(stock_dict)
                 continue
-        return output_list
+    return output_list
         # raise ConnectionError("Не удалось подключиться к сервису")
-    else:
-        return []
+
+
+def get_begin_date(months_number: int):
+    pass
+

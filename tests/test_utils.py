@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from src.config import TEST_FILE_DIR
-from src.utils import (RATE_API_KEY, STOCK_API_KEY, get_exchange_rates, get_filtered_df, get_greeting, get_period,
+from src.utils import (RATE_API_KEY, STOCK_API_KEY, get_exchange_rates, select_tx_for_period, get_greeting, get_period,
                        get_stocks_data, get_top_tx, get_user_settings, read_excel_file, total_expenses)
 
 
@@ -103,7 +103,7 @@ def test_get_filtered_df(test_date, expected):
     """Тест отбора данных из прочитанного Excel-файла и получения DataFrame за период"""
     test_file_path = os.path.join(TEST_FILE_DIR, "test_operations.xlsx")
     df = read_excel_file(test_file_path)
-    test_df = get_filtered_df(df, test_date)
+    test_df = select_tx_for_period(df, test_date)
     assert test_df.shape == expected
 
 
@@ -159,7 +159,7 @@ def test_get_top_tx(test_top_tx):
     """Тест функции получения топ-5 транзакций за период"""
     test_file_path = os.path.join(TEST_FILE_DIR, "test_operations.xlsx")
     df = read_excel_file(test_file_path)
-    filtered_df = get_filtered_df(df, "2021-12-31 23:59:59")
+    filtered_df = select_tx_for_period(df, "2021-12-31 23:59:59")
     assert get_top_tx(filtered_df) == test_top_tx
     empty_file_path = os.path.join(TEST_FILE_DIR, "test_empty_tx.xlsx")
     df_empty = read_excel_file(empty_file_path)
