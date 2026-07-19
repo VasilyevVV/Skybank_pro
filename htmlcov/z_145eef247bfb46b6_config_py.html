@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">3 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">3<span class="text"> run</span></button>
+            <span class="text">6 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">6<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_145eef247bfb46b6_main_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-22 21:01 +0700
+            created at 2026-07-19 20:53 +0700
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -82,12 +82,18 @@
 <main id="source">
     <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">import</span> <span class="nam">os</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="com"># &#1040;&#1073;&#1089;&#1086;&#1083;&#1102;&#1090;&#1085;&#1099;&#1081; &#1087;&#1091;&#1090;&#1100; &#1082; &#1082;&#1086;&#1088;&#1085;&#1077;&#1074;&#1086;&#1081; &#1087;&#1072;&#1087;&#1082;&#1077; &#1087;&#1088;&#1086;&#1077;&#1082;&#1090;&#1072;, &#1089; &#1091;&#1095;&#1105;&#1090;&#1086;&#1084;,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="com"># &#1095;&#1090;&#1086; &#1092;&#1072;&#1081;&#1083;&#1099; &#1085;&#1072;&#1093;&#1086;&#1076;&#1103;&#1090;&#1089;&#1103; &#1074; &#1087;&#1072;&#1087;&#1082;&#1072;&#1093; src, tests, data, logs</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="nam">BASE_DIRECTORY</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">dirname</span><span class="op">(</span><span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">dirname</span><span class="op">(</span><span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">abspath</span><span class="op">(</span><span class="nam">__file__</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="com"># &#1055;&#1091;&#1090;&#1100; &#1082; &#1082;&#1072;&#1090;&#1072;&#1083;&#1086;&#1075;&#1091; &#1089; &#1092;&#1072;&#1081;&#1083;&#1072;&#1084;&#1080; &#1076;&#1083;&#1103; &#1090;&#1077;&#1089;&#1090;&#1080;&#1088;&#1086;&#1074;&#1072;&#1085;&#1080;&#1103; (json, csv, Excel): tests\test_data</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="nam">TEST_FILE_DIR</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">BASE_DIRECTORY</span><span class="op">,</span> <span class="str">"tests"</span><span class="op">,</span> <span class="str">"test_data"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">dotenv</span> <span class="key">import</span> <span class="nam">load_dotenv</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="com"># &#1040;&#1073;&#1089;&#1086;&#1083;&#1102;&#1090;&#1085;&#1099;&#1081; &#1087;&#1091;&#1090;&#1100; &#1082; &#1082;&#1086;&#1088;&#1085;&#1077;&#1074;&#1086;&#1081; &#1087;&#1072;&#1087;&#1082;&#1077; &#1087;&#1088;&#1086;&#1077;&#1082;&#1090;&#1072;, &#1089; &#1091;&#1095;&#1105;&#1090;&#1086;&#1084;,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="com"># &#1095;&#1090;&#1086; &#1092;&#1072;&#1081;&#1083;&#1099; &#1085;&#1072;&#1093;&#1086;&#1076;&#1103;&#1090;&#1089;&#1103; &#1074; &#1087;&#1072;&#1087;&#1082;&#1072;&#1093; src, tests, data, logs</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="nam">BASE_DIRECTORY</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">dirname</span><span class="op">(</span><span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">dirname</span><span class="op">(</span><span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">abspath</span><span class="op">(</span><span class="nam">__file__</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t"><span class="nam">load_dotenv</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="com"># &#1055;&#1086;&#1083;&#1091;&#1095;&#1077;&#1085;&#1080;&#1077; &#1080;&#1084;&#1077;&#1085;&#1080; &#1092;&#1072;&#1081;&#1083;&#1072; &#1089; &#1086;&#1087;&#1077;&#1088;&#1072;&#1094;&#1080;&#1103;&#1084;&#1080; &#1080;&#1079; &#1092;&#1072;&#1081;&#1083;&#1072; .env</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="nam">operations_file</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"OPERATIONS_FILE_NAME"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="com"># &#1055;&#1091;&#1090;&#1100; &#1082; &#1082;&#1072;&#1090;&#1072;&#1083;&#1086;&#1075;&#1091; &#1089; &#1092;&#1072;&#1081;&#1083;&#1072;&#1084;&#1080; &#1076;&#1083;&#1103; &#1090;&#1077;&#1089;&#1090;&#1080;&#1088;&#1086;&#1074;&#1072;&#1085;&#1080;&#1103; (json, csv, Excel): tests\test_data</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="nam">TEST_FILE_DIR</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">BASE_DIRECTORY</span><span class="op">,</span> <span class="str">"tests"</span><span class="op">,</span> <span class="str">"test_data"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -97,7 +103,7 @@
             <a class="nav" href="z_145eef247bfb46b6_main_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-22 21:01 +0700
+            created at 2026-07-19 20:53 +0700
         </p>
     </div>
 </footer>
