@@ -4,6 +4,7 @@ from src.config import TEST_FILE_DIR
 from src.services import get_last_day_of_month, profit_categories, get_tx_list, simple_search
 from src.utils import read_excel_file
 
+# Путь к тестовому Excel-файлу с операциями, для использования в нескольких тестовых функциях
 TEST_FILE_PATH = str(os.path.join(TEST_FILE_DIR, "test_operations.xlsx"))
 
 
@@ -27,7 +28,7 @@ def test_profit_categories_bad_month():
     """Тест функции определения выгодных категорий кешбэка при некорректном задании месяца"""
     df = read_excel_file(TEST_FILE_PATH)
     res = profit_categories(df, 20, 2021)
-    assert res == {}
+    assert res == "{}"
 
 
 def test_profit_categories_empty_df():
@@ -35,7 +36,7 @@ def test_profit_categories_empty_df():
     test_file_path = os.path.join(TEST_FILE_DIR, "test_empty_tx.xlsx")
     df = read_excel_file(test_file_path)
     res = profit_categories(df, 1, 2020)
-    assert (res) == {}
+    assert (res) == "{}"
 
 
 def test_get_tx_list():
@@ -44,7 +45,7 @@ def test_get_tx_list():
 
 
 def test_simple_search(test_entertainments, test_flowers):
-    """ Тест функции поиска операций по описанию или категории"""
+    """Тест функции поиска операций по описанию или категории"""
     test_input_list = get_tx_list(TEST_FILE_PATH)
     result1 = simple_search("развлечения", test_input_list)
     assert result1 == test_entertainments.replace("\n", "")
@@ -53,5 +54,5 @@ def test_simple_search(test_entertainments, test_flowers):
 
 
 def test_empty_search():
-    """ Тест функции поиска с пустым списком операций """
+    """Тест функции поиска с пустым списком операций"""
     assert simple_search("перевод", []) == "[]"

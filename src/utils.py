@@ -2,6 +2,7 @@ import datetime as dt
 import json
 import os
 import time
+from typing import Any
 
 import pandas as pd
 import requests
@@ -60,9 +61,9 @@ def read_excel_file(file_path: str) -> pd.DataFrame | None:
 
 
 def select_tx_for_period(input_df: pd.DataFrame, current_date: str) -> pd.DataFrame | None:
-    """ Функция отбора данных из DataFrame за период.
-        Принимает на вход полный набор данных и дату в формате ГГГГ-ММ-ДД ЧЧ:мм:сс.
-        Выводит данные за период с начало месяца по указанную дату.
+    """Функция отбора данных из DataFrame за период.
+    Принимает на вход полный набор данных и дату в формате ГГГГ-ММ-ДД ЧЧ:мм:сс.
+    Выводит данные за период с начало месяца по указанную дату.
     """
     # Получение периода: с 1-го числа месяца по текущую дату
     period = get_period(current_date)
@@ -86,7 +87,9 @@ def total_expenses(df_excel: pd.DataFrame) -> list[dict]:
         return []
     else:
         # Отбор успешных операций: статус не равен FAILED, только траты по картам: Сумма < 0 и "Номер карты" не пустой
-        filtered_df = df_excel[(df_excel["Статус"] != "FAILED") & (df_excel["Сумма платежа"] < 0.0) & (df_excel["Номер карты"] != '')]
+        filtered_df = df_excel[
+            (df_excel["Статус"] != "FAILED") & (df_excel["Сумма платежа"] < 0.0) & (df_excel["Номер карты"] != "")
+        ]
         # Группировка по номерам карт и получение сумм
         sum_by_cards = filtered_df.groupby(by=["Номер карты"], sort=False)["Сумма операции"].sum().reset_index()
         # Переименование столбцов, для вывода словаря
@@ -126,11 +129,10 @@ def get_top_tx(input_df: pd.DataFrame) -> list[dict]:
         return top_5_tx.to_dict(orient="records")
 
 
-def get_user_settings(json_fila_path: str) -> dict:
-    """Функция чтения файла с пользовательскими списками валют и акций из JSON-файла"""
-    settings_data = {}
-    if os.path.exists(json_fila_path):
-        with open(json_fila_path, "r", encoding="utf-8") as settings_file:
+def get_user_settings(json_file_path: str) -> dict | Any:
+    """Функция чтения JSON-файла user_settings.json с пользовательскими настройками - списками валют и акций"""
+    if os.path.exists(json_file_path):
+        with open(json_file_path, "r", encoding="utf-8") as settings_file:
             try:
                 settings_data = json.load(settings_file)
                 return settings_data
@@ -179,7 +181,7 @@ def get_exchange_rates(currency_list: list) -> list[dict]:
 
 
 def get_stocks_data(company_list: list) -> list[dict]:
-    """ Функция получения стоимости акций """
+    """Функция получения стоимости акций"""
     output_list = []
     if company_list != []:
         for company in company_list:
@@ -207,9 +209,9 @@ def get_stocks_data(company_list: list) -> list[dict]:
                 output_list.append(stock_dict)
                 continue
     return output_list
-        # raise ConnectionError("Не удалось подключиться к сервису")
+    # raise ConnectionError("Не удалось подключиться к сервису")
 
 
-def get_begin_date(months_number: int):
-    pass
-
+def get_begin_date(months_number: int) -> str:
+    """Функци определения даты, предшествующей заданному количеству месяцев"""
+    return ""

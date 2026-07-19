@@ -1,19 +1,17 @@
 import json
 import os
 
-
-from config import BASE_DIRECTORY, operations_file
-from utils import (get_greeting, get_exchange_rates, select_tx_for_period, get_stocks_data, get_top_tx, get_user_settings,
-                   read_excel_file, total_expenses)
-
+from src.config import BASE_DIRECTORY, operations_file
+from src.utils import (get_exchange_rates, get_greeting, get_stocks_data, get_top_tx, get_user_settings,
+                       read_excel_file, select_tx_for_period, total_expenses)
 
 # Получение имени файла с пользовательскими списками валют и акций из файла .env
 user_settings_file = os.getenv("USER_SETTINGS_JSON_FILE")
 
 
-def get_main_page_data(working_date: str):
+def get_main_page_data(input_date: str) -> str:
     """Функция для страницы «Главная». Принимает на вход строку с датой и временем в формате "YYYY-MM-DD HH:MM:SS"
-       Отдает JSON-ответ - преобразованный из сформированного словаря
+    Отдает JSON-ответ - преобразованный из сформированного словаря
     """
     # Получение строки приветствия в зависимости от текущего времени
     main_page_dict = {"greeting": "", "cards": [], "top_transactions": [], "currency_rates": [], "stock_prices": []}
@@ -25,7 +23,7 @@ def get_main_page_data(working_date: str):
         main_page_dict["cards"] = []
         main_page_dict["top_transactions"] = []
     else:
-        df_by_period = select_tx_for_period(full_data_frame, working_date)
+        df_by_period = select_tx_for_period(full_data_frame, input_date)
         cards_list = total_expenses(df_by_period)
         main_page_dict["cards"] = cards_list
         main_page_dict["top_transactions"] = get_top_tx(df_by_period)
@@ -44,9 +42,7 @@ def get_main_page_data(working_date: str):
         main_page_dict["stock_prices"] = []
     json_data = json.dumps(main_page_dict).encode("utf-8", "ignore").decode("unicode-escape")
     return json_data
-    # return main_page_dict
 
 
-#res = get_main_page_data("2021-12-25 23:59:59")
-# pprint.pprint(res)  # , sort_dicts=False)
-#print(res)
+# res = get_main_page_data("2021-12-25 23:59:59")
+# print(res)

@@ -5,8 +5,19 @@ import pytest
 from freezegun import freeze_time
 
 from src.config import TEST_FILE_DIR
-from src.utils import (RATE_API_KEY, STOCK_API_KEY, get_exchange_rates, select_tx_for_period, get_greeting, get_period,
-                       get_stocks_data, get_top_tx, get_user_settings, read_excel_file, total_expenses)
+from src.utils import (
+    RATE_API_KEY,
+    STOCK_API_KEY,
+    get_exchange_rates,
+    select_tx_for_period,
+    get_greeting,
+    get_period,
+    get_stocks_data,
+    get_top_tx,
+    get_user_settings,
+    read_excel_file,
+    total_expenses,
+)
 
 
 # Тест функции получения строки приветствия в зависимости от времени суток
