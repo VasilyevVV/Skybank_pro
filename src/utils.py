@@ -7,6 +7,7 @@ from typing import Any
 import pandas as pd
 import requests
 from dotenv import load_dotenv
+from dateutil.relativedelta import relativedelta
 
 # Загрузка переменных из .env-файла
 load_dotenv()
@@ -36,6 +37,7 @@ def get_period(current_date: str) -> dict:
     """
     period = {}
     try:
+        # Преобразование даты, переданой на вход, в формат Дата-Время
         start_date = dt.datetime.strptime(current_date, "%Y-%m-%d %H:%M:%S").replace(day=1)
         period["begin"] = dt.datetime.strftime(start_date, "%Y-%m-%d 00:00:00")
         period["end"] = current_date
@@ -212,6 +214,10 @@ def get_stocks_data(company_list: list) -> list[dict]:
     # raise ConnectionError("Не удалось подключиться к сервису")
 
 
-def get_begin_date(months_number: int) -> str:
-    """Функци определения даты, предшествующей заданному количеству месяцев"""
-    return ""
+def get_begin_date(input_day, months_number: int) -> str:
+    """Функци определения даты, предшествующей заданному количеству месяцев.
+       Принимает дату в формате D
+    """
+    result_date = input_day + relativedelta(months=months_number)
+    result_str = dt.datetime.strftime(result_date, "%Y.%m.%d %H:%M:%S")
+    return result_str

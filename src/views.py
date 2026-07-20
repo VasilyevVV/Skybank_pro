@@ -43,6 +43,3 @@ def get_main_page_data(input_date: str) -> str:
     json_data = json.dumps(main_page_dict).encode("utf-8", "ignore").decode("unicode-escape")
     return json_data
 
-
-# res = get_main_page_data("2021-12-25 23:59:59")
-# print(res)

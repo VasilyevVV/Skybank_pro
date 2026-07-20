@@ -91,4 +91,3 @@ def simple_search(search_str: str, input_tx: list[dict]) -> str:
         # Если входной набор данных пустой, возвращается пустой список
         result = []
     return json.dumps(result, ensure_ascii=False)  # , indent=4)
-
