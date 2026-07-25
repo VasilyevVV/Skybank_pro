@@ -6,8 +6,8 @@ from typing import Any
 
 import pandas as pd
 import requests
-from dotenv import load_dotenv
 from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
 
 # Загрузка переменных из .env-файла
 load_dotenv()
@@ -47,8 +47,9 @@ def get_period(current_date: str) -> dict:
     return period
 
 
-def read_excel_file(file_path: str) -> pd.DataFrame | None:
-    """Чтение Excel-файла с операциями"""
+def read_excel_file(file_path: str) -> pd.DataFrame:
+    """Функция чтения Excel-файла с операциями. Принимае на вход полный путь к файлу.
+     Возвращает набор данных DataFrame"""
     if os.path.exists(file_path):
         # Если файл существует, попытка прочитать Excel-файл
         try:
@@ -64,7 +65,7 @@ def read_excel_file(file_path: str) -> pd.DataFrame | None:
 
 def select_tx_for_period(input_df: pd.DataFrame, current_date: str) -> pd.DataFrame | None:
     """Функция отбора данных из DataFrame за период.
-    Принимает на вход полный набор данных и дату в формате ГГГГ-ММ-ДД ЧЧ:мм:сс.
+    Принимает на вход набор данных и дату в формате "ГГГГ-ММ-ДД чч:мм:сс".
     Выводит данные за период с начало месяца по указанную дату.
     """
     # Получение периода: с 1-го числа месяца по текущую дату
@@ -83,9 +84,7 @@ def select_tx_for_period(input_df: pd.DataFrame, current_date: str) -> pd.DataFr
 
 def total_expenses(df_excel: pd.DataFrame) -> list[dict]:
     """Функция расчёта суммы операций по каждой карте за период"""
-    if df_excel is None:
-        return []
-    elif df_excel.empty:
+    if df_excel is None or df_excel.empty:
         return []
     else:
         # Отбор успешных операций: статус не равен FAILED, только траты по картам: Сумма < 0 и "Номер карты" не пустой
@@ -117,6 +116,7 @@ def get_top_tx(input_df: pd.DataFrame) -> list[dict]:
         ].sort_values(by=["Сумма операции с округлением"], ascending=False)
         top_5_tx = tx_sorted.nlargest(5, "Сумма операции с округлением")
         top_5_tx = top_5_tx[["Дата платежа", "Сумма платежа", "Категория", "Описание"]]
+        # Переименование столбцов
         top_5_tx.rename(
             columns={
                 "Дата платежа": "date",
@@ -201,7 +201,7 @@ def get_stocks_data(company_list: list) -> list[dict]:
                     latest_date = result["Meta Data"]["3. Last Refreshed"]
                     # Определение цены по ключу - дате и значению на момент закрытия ("4. close")
                     closing_price = result["Time Series (Daily)"][latest_date]["4. close"]
-                    current_price = str(round(float(closing_price), 2))
+                    current_price = round(float(closing_price), 2)
                 else:
                     current_price = "unknown"
                 stock_dict = {"stock": company, "price": current_price}
@@ -216,7 +216,7 @@ def get_stocks_data(company_list: list) -> list[dict]:
 
 def get_begin_date(input_day, months_number: int) -> str:
     """Функци определения даты, предшествующей заданному количеству месяцев.
-       Принимает дату в формате D
+    Принимает дату в формате D
     """
     result_date = input_day + relativedelta(months=months_number)
     result_str = dt.datetime.strftime(result_date, "%Y.%m.%d %H:%M:%S")

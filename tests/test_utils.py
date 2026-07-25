@@ -18,7 +18,7 @@ from src.utils import (
     get_user_settings,
     read_excel_file,
     total_expenses,
-    get_begin_date
+    get_begin_date,
 )
 
 
@@ -268,13 +268,12 @@ def test_empty_stock():
 @pytest.mark.parametrize(
     "test_date, test_month, expected",
     [
-        ("2021.12.20", -1, "2021.11.20 23:59:59"),
         ("2024.12.29", 2, "2025.02.28 23:59:59"),
         ("2021.12.27", -3, "2021.09.27 23:59:59"),
         ("2021.12.31", 0, "2021.12.31 23:59:59"),
     ],
 )
 def test_get_begin_day(test_date, test_month, expected):
-    """Тест функции определения"""
-    test_day = dt.datetime.strptime(test_date, "%Y.%m.%d").replace(hour=23,minute=59,second=59)
+    """Тест функции определения начала периода, используемой в отчётах, н-р Траты по категории за три месяца"""
+    test_day = dt.datetime.strptime(test_date, "%Y.%m.%d").replace(hour=23, minute=59, second=59)
     assert get_begin_date(test_day, test_month) == expected

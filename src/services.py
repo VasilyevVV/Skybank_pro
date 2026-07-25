@@ -4,6 +4,7 @@ import re
 
 import pandas as pd
 
+
 from src.utils import read_excel_file, select_tx_for_period
 
 
@@ -18,7 +19,7 @@ def get_last_day_of_month(month: int, year: int) -> int:
         return 0
 
 
-def profit_categories(input_df: pd.DataFrame, calc_month: int, calc_year: int) -> str:
+def get_profit_categories(input_df: pd.DataFrame, calc_month: int, calc_year: int) -> str:
     """Функцию для анализа выгодности категорий повышенного кешбэка.
     На вход поступают данные для анализа, год и месяц.
     На выходе — JSON с анализом, сколько на каждой категории можно заработать кешбэка в указанном месяце года.
@@ -54,12 +55,13 @@ def profit_categories(input_df: pd.DataFrame, calc_month: int, calc_year: int) -
             # Ключ - название категории из поля "Категория", значение - значение из поля "Бонусы"
             for category in services_dict:
                 out_dict[category["Категория"]] = category["Бонусы (включая кэшбэк)"]
-            json_data = json.dumps(out_dict).encode("utf-8", "ignore").decode("unicode-escape")
+            json_data = json.dumps(out_dict, ensure_ascii=False)
             return json_data
 
 
 def get_tx_list(file_path: str) -> list[dict]:
     """Функция получения списка операций из Excel-файла в виде списка словарей"""
+
     # получение датафрейма из Excel
     tx_list = []
     excel_df = read_excel_file(file_path)

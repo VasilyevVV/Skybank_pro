@@ -1,7 +1,7 @@
 import os
 import pytest
 from src.config import TEST_FILE_DIR
-from src.services import get_last_day_of_month, profit_categories, get_tx_list, simple_search
+from src.services import get_last_day_of_month, get_profit_categories, get_tx_list, simple_search
 from src.utils import read_excel_file
 
 # Путь к тестовому Excel-файлу с операциями, для использования в нескольких тестовых функциях
@@ -20,14 +20,14 @@ def test_get_last_day(month, year, expected):
 def test_profit_categories(test_profit_json):
     """Тест функции определения выгодных категорий кешбэка"""
     df = read_excel_file(TEST_FILE_PATH)
-    res = profit_categories(df, 12, 2021)
+    res = get_profit_categories(df, 12, 2021)
     assert res == test_profit_json
 
 
 def test_profit_categories_bad_month():
     """Тест функции определения выгодных категорий кешбэка при некорректном задании месяца"""
     df = read_excel_file(TEST_FILE_PATH)
-    res = profit_categories(df, 20, 2021)
+    res = get_profit_categories(df, 20, 2021)
     assert res == "{}"
 
 
@@ -35,7 +35,7 @@ def test_profit_categories_empty_df():
     """Тест функции определения выгодных категорий кешбэка, если набор данных пустой"""
     test_file_path = os.path.join(TEST_FILE_DIR, "test_empty_tx.xlsx")
     df = read_excel_file(test_file_path)
-    res = profit_categories(df, 1, 2020)
+    res = get_profit_categories(df, 1, 2020)
     assert (res) == "{}"
 
 

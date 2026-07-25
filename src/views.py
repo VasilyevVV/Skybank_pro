@@ -42,4 +42,3 @@ def get_main_page_data(input_date: str) -> str:
         main_page_dict["stock_prices"] = []
     json_data = json.dumps(main_page_dict).encode("utf-8", "ignore").decode("unicode-escape")
     return json_data
-

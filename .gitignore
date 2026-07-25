@@ -181,5 +181,5 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 /.idea/
-/logs
+#/logs
 output.json
